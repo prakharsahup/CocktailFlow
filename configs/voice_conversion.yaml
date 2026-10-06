@@ -1,0 +1,31 @@
+# Voice Conversion module configuration
+#
+# backend: pretrained -> OpenVoice v2 tone-colour converter (MIT, zero-shot; default)
+#                        converter only, vendored in third_party/openvoice
+#          custom     -> our AutoVC + HiFi-GAN below, trained with training/train_voice_conversion.py
+backend: pretrained
+pretrained:
+  tau: 0.3                         # OpenVoice default; lower = closer to target timbre
+
+# --- custom model (used when backend: custom) — sized for CPU training ---
+# Speaker embeddings come from Module 2 (whichever diarization backend is active).
+# Vocoder: speechbrain/tts-hifigan-libritts-16kHz; its mel parameters are fixed in
+# models/voice_conversion.py:audio_to_mel.
+model:
+  dim_neck: 16                 # bottleneck channels per direction (AutoVC repo default)
+  freq: 16                     # one content code every 16 frames (~256 ms)
+  dim_emb: 192                 # = Module 2 embedding_dim
+  dim_pre: 256                 # paper: 512
+  dim_lstm: 512                # paper: 1024
+
+training:
+  steps: 8000
+  val_every: 500
+  crop_frames: 128             # ~2 s
+  batch_size: 16
+  learning_rate: 0.001
+  seed: 42
+
+loss:
+  reconstruction_weight: 1.0
+  content_consistency_weight: 1.0

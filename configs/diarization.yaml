@@ -1,0 +1,38 @@
+# Diarization / speaker-embedding module configuration
+#
+# backend: pretrained -> SpeechBrain ECAPA-TDNN trained on VoxCeleb 1+2 (default)
+#          custom     -> our ECAPA-TDNN below, trained with training/train_diarization.py
+# Both produce 192-dim embeddings, so Module 3 works with either.
+backend: pretrained
+pretrained:
+  source: speechbrain/spkrec-ecapa-voxceleb
+
+# --- custom model (used when backend: custom) — sized for CPU training ---
+model:
+  channels: 256               # paper: 512-1024; 256 is plenty for 30 training speakers
+  attention_channels: 128
+  embedding_dim: 192          # must match voice_conversion.yaml dim_emb
+
+data:                         # log-mel feature parameters
+  n_mels: 80
+  n_fft: 512
+  hop_length: 160
+  win_length: 400
+
+training:
+  epochs: 30
+  crop_sec: 2.0
+  batch_size: 32
+  learning_rate: 0.002        # OneCycle peak
+  weight_decay: 0.00002
+  seed: 42
+
+loss:                         # AAM-Softmax
+  margin: 0.2
+  scale: 30
+
+diarization:
+  window_sec: 1.5
+  hop_sec: 0.25
+  min_gap_sec: 0.5           # pauses shorter than this inside a turn are bridged
+  num_clusters: 2

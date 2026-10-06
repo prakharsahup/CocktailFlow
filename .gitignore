@@ -1,0 +1,43 @@
+# Datasets — large, environment-specific
+data/
+
+# Trained model checkpoints
+checkpoints/*.pt
+checkpoints/*.pth
+checkpoints/hifigan-*/
+
+# Training logs and the backup of the pre-fix run
+logs/
+_old_run/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual environments
+venv/
+env/
+.env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Pretrained weights (downloaded automatically on first use)
+checkpoints/pretrained/

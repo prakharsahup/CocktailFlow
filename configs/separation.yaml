@@ -1,0 +1,31 @@
+# Separation module configuration
+#
+# backend: pretrained -> Asteroid Conv-TasNet trained on full Libri2Mix sep_clean 16 kHz (default)
+#          custom     -> our Conv-TasNet below, trained with training/train_separation.py
+backend: pretrained
+pretrained:
+  source: JorisCos/ConvTasNet_Libri2Mix_sepclean_16k
+
+# --- custom model (used when backend: custom) — sized for CPU training ---
+# Conv-TasNet notation: N = enc_num_feats, L = enc_kernel_size, B = msk_num_feats,
+# H = msk_num_hidden_feats, P = msk_kernel_size, X = msk_num_layers, R = msk_num_stacks
+model:
+  enc_kernel_size: 32          # L (stride L/2) — 2 ms at 16 kHz, same as L=16 at 8 kHz
+  enc_num_feats: 256           # N (paper: 512)
+  num_sources: 2
+  msk_kernel_size: 3           # P
+  msk_num_feats: 128           # B — bottleneck (paper: 128)
+  msk_num_hidden_feats: 256    # H (paper: 512)
+  msk_num_layers: 8            # X
+  msk_num_stacks: 3            # R
+  msk_activate: relu
+
+training:
+  steps: 4000
+  val_every: 500
+  segment_sec: 2.0             # dynamic-mixing crop length
+  batch_size: 4
+  learning_rate: 0.001
+  weight_decay: 0.0
+  grad_clip: 5.0
+  seed: 42

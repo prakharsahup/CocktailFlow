@@ -1,0 +1,2 @@
+num_speakers,num_trials,crop_sec,eer,mean_same_speaker_cos,mean_diff_speaker_cos
+10,19900,3.0,0.1092,0.649,0.0965
