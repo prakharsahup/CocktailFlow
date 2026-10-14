@@ -1,0 +1,5 @@
+[server]
+# Disable the source-file watcher to prevent speechbrain's lazy flair/numba
+# imports from crashing the watcher (those optional deps aren't installed).
+fileWatcherType = "none"
+headless = true
